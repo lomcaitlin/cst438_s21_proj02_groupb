@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/venv,macos,linux,django,python,windows,dotenv
-# Edit at https://www.toptal.com/developers/gitignore?templates=venv,macos,linux,django,python,windows,dotenv
+# Created by https://www.toptal.com/developers/gitignore/api/venv,macos,linux,django,dotenv,python,windows,vscode
+# Edit at https://www.toptal.com/developers/gitignore?templates=venv,macos,linux,django,dotenv,python,windows,vscode
 
 ### Django ###
 *.log
@@ -269,6 +269,14 @@ Temporary Items
 pyvenv.cfg
 pip-selfcheck.json
 
+### vscode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -295,4 +303,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/venv,macos,linux,django,python,windows,dotenv
+# End of https://www.toptal.com/developers/gitignore/api/venv,macos,linux,django,dotenv,python,windows,vscode
