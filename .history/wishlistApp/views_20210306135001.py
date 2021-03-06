@@ -7,6 +7,6 @@ def index(request):
 def login(request):
     return HttpResponse("Login Screen.")    
 
-def logout(request):
+def logout(request)
     return HttpResponse("Log out Screen.")
     

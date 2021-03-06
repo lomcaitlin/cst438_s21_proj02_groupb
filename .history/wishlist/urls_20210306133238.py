@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-
+from my_app import views
 
 urlpatterns = [
 	path('wishlistApp/', include('wishlistApp.urls')),

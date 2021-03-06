@@ -5,8 +5,8 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def login(request):
-    return HttpResponse("Login Screen.")    
+    return HttpResponse("Login Screen")    
 
-def logout(request):
-    return HttpResponse("Log out Screen.")
+def logout(request)
+    return
     
