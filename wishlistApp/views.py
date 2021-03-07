@@ -4,6 +4,8 @@ from django.db import models
 from .models import User, URL, Item
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from .forms import UserUpdateForm
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     return render(request, 'wishlistApp/index.html')
@@ -25,3 +27,15 @@ def register(request):
 	else:
 		form = UserCreationForm()
 	return render(request, 'wishlistApp/register.html', {'form': form, 'title' : 'Register'})
+
+@login_required
+def profile(request):
+	if request.method == 'POST':
+		form = UserUpdateForm(request.POST, instance=request.user)
+		if form.is_valid():
+			form.save()
+			messages.success(request, f"Your account has been updated.")
+			return redirect('profile')
+	else:
+		form = UserUpdateForm(instance=request.user)
+	return render(request, 'wishlistApp/profile.html', {'form' : form})
