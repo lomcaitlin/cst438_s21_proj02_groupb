@@ -8,6 +8,9 @@
     <fieldset class="form-group">
       <legend class="border-bottom mb-4">Account Info</legend>
       {{ form|crispy }}
+      <div class='form-group'>
+        <button class='btn btn-sm btn-outline-danger' formaction="{% url 'change-password' %}" formmethod='get' type='submit'>Change Password</button>
+      </div>
     </fieldset>
     <div class="form-group">
       <button class="btn btn-outline-info" type="submit">Update Info</button>

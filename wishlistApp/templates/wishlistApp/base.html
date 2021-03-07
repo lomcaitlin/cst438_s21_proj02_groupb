@@ -14,7 +14,11 @@
   {% if title %}
     <title>Wishlist - {{ title }}</title>
   {% else %}
-    <title>Wishlist</title>
+    <title>
+      {% block title %}
+      Wishlist
+      {% endblock title %}
+    </title>
   {% endif %}
 
 </head>
