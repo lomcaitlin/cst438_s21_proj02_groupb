@@ -12,8 +12,9 @@
         <button class='btn btn-sm btn-outline-danger' formaction="{% url 'change-password' %}" formmethod='get' type='submit'>Change Password</button>
       </div>
     </fieldset>
-    <div class="form-group">
+    <div class="form-group justify-right-parent">
       <button class="btn btn-outline-info" type="submit">Update Info</button>
+      <button class="btn btn-outline-danger justify-right" type="button" formaction="{% url 'delete-acct' %}" formmethod='get'>Delete Account</button>
     </div>
   </form>
 {% endblock content %}

@@ -54,3 +54,8 @@ def change_password(request):
 		form = PasswordChangeForm(request.user)
 	return render(request, 'wishlistApp/change-password.html', {'form' : form, 'title' : 'Change Password'})
 
+# still working on implementation of delete
+@login_required
+def delete_acct(request):
+	request.user.delete()
+	return redirect('index')
