@@ -1,3 +1,12 @@
 body {
   margin-top: 5rem;
 }
+
+.justify-right-parent {
+  position: relative;
+}
+
+.justify-right {
+  position: absolute;
+  right: 0;
+}
