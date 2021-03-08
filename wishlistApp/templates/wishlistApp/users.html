@@ -1,20 +1,17 @@
 {% extends 'wishlistApp/base.html' %}
 
 {% block content %}
-<h1 class="jumbotron"> WishlistApp </h1>
 <table class="table table-dark">
   <tr>
-    <th scope="col">id</th>
-    <th scope="col">Name</th>
-    <th scope="col">Password</th>
+    <th scope="col">Username</th>
+    <th scope="col">Email</th>
     <th scope="col">Admin Status</th>
   </tr>
   {% for user in users %}
     <tr>
-      <th>{{user.id}} </th>
-      <th>{{user.name}} </th>
-      <th>{{user.password}} </th>
-      <th>{{user.admin}} </th>
+      <th>{{user.username}} </th>
+      <th>{{user.email}} </th>
+      <th>{{user.is_staff}} </th>
     </tr>
   {% endfor %}
 </table>
