@@ -6,14 +6,16 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
 from .forms import UserUpdateForm, UserDeleteForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, get_user_model
+
 
 def index(request):
     return render(request, 'wishlistApp/index.html')
 
 def users(request):
+	
 	context = {
-		'users': User.objects.all()
+		'users':  get_user_model().objects.all()
 	}
 	return render(request, 'wishlistApp/users.html', context)
 
