@@ -4,7 +4,7 @@ from django.db import models
 from .models import User, URL, Item
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
-from .forms import UserUpdateForm
+from .forms import UserUpdateForm, UserDeleteForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 
@@ -56,6 +56,13 @@ def change_password(request):
 
 # still working on implementation of delete
 @login_required
-def delete_acct(request):
-	request.user.delete()
-	return redirect('index')
+def delete_account(request):
+	if request.method == 'POST':
+		form = UserDeleteForm(request.POST, instance=request.user)
+		user = request.user
+		user.delete()
+		messages.success(request, f"Your account has been deleted.")
+		return redirect('index')
+	else:
+		form = UserDeleteForm(instance=request.user)
+	return render(request, 'wishlistApp/delete-account.html', {'form':form, 'title': 'Delete Account'})
