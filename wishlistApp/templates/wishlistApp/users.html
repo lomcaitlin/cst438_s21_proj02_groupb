@@ -1,0 +1,18 @@
+{% extends 'wishlistApp/base.html' %}
+
+{% block content %}
+<table class="table table-dark">
+  <tr>
+    <th scope="col">Username</th>
+    <th scope="col">Email</th>
+    <th scope="col">Admin Status</th>
+  </tr>
+  {% for user in users %}
+    <tr>
+      <th>{{user.username}} </th>
+      <th>{{user.email}} </th>
+      <th>{{user.is_staff}} </th>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock content %}
