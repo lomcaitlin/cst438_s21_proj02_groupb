@@ -32,11 +32,6 @@ def register(request):
 	return render(request, 'wishlistApp/register.html', {'form': form, 'title' : 'Register'})
 
 	
-def login(request):
-    return HttpResponse("Login Screen.")    
-
-def logout(request):
-    return HttpResponse("Log out Screen.")
 
 @login_required
 def profile(request):

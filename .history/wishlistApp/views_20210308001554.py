@@ -30,8 +30,8 @@ def register(request):
 	else:
 		form = UserCreationForm()
 	return render(request, 'wishlistApp/register.html', {'form': form, 'title' : 'Register'})
-
 	
+
 def login(request):
     return HttpResponse("Login Screen.")    
 
@@ -75,3 +75,4 @@ def delete_account(request):
 	else:
 		form = UserDeleteForm(instance=request.user)
 	return render(request, 'wishlistApp/delete-account.html', {'form':form, 'title': 'Delete Account'})
+>>>>>>> master

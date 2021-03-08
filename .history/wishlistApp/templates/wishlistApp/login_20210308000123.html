@@ -1,7 +1,9 @@
 {% extends "wishlistApp/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+<body>
 <h3>Welcome to WishList App!</h3>
+<div class="content-section">
 
 <form action="login" method= "post">
 <h4>Username: 
@@ -10,5 +12,6 @@
 <h4>Password:  <input type="password" name="password"></h4>
 <input type="Submit">   
 </form>
+
 
 {% endblock content%}

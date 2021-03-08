@@ -31,8 +31,7 @@ def register(request):
 		form = UserCreationForm()
 	return render(request, 'wishlistApp/register.html', {'form': form, 'title' : 'Register'})
 
-	
-def login(request):
+	def login(request):
     return HttpResponse("Login Screen.")    
 
 def logout(request):

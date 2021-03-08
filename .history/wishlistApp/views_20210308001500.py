@@ -10,6 +10,12 @@ from django.contrib.auth import update_session_auth_hash, get_user_model
 
 
 def index(request):
+<<<<<<< HEAD
+    return HttpResponse("Hello, world. You're at the polls index.")
+
+
+    
+=======
     return render(request, 'wishlistApp/index.html')
 
 def users(request):
@@ -30,13 +36,6 @@ def register(request):
 	else:
 		form = UserCreationForm()
 	return render(request, 'wishlistApp/register.html', {'form': form, 'title' : 'Register'})
-
-	
-def login(request):
-    return HttpResponse("Login Screen.")    
-
-def logout(request):
-    return HttpResponse("Log out Screen.")
 
 @login_required
 def profile(request):
@@ -75,3 +74,4 @@ def delete_account(request):
 	else:
 		form = UserDeleteForm(instance=request.user)
 	return render(request, 'wishlistApp/delete-account.html', {'form':form, 'title': 'Delete Account'})
+>>>>>>> master
