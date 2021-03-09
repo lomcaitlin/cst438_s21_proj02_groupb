@@ -1,18 +1,23 @@
 {% extends 'wishlistApp/base.html' %}
 
 {% block content %}
-<table class="table table-dark">
-  <tr>
-    <th scope="col">Username</th>
-    <th scope="col">Email</th>
-    <th scope="col">Admin Status</th>
-  </tr>
-  {% for user in users %}
+<form action = '' method='POST'>{% csrf_token %}
+  <table class="table table-dark">
     <tr>
-      <th>{{user.username}} </th>
-      <th>{{user.email}} </th>
-      <th>{{user.is_staff}} </th>
+      <th scope="col">Username</th>
+      <th scope="col">Email</th>
+      <th scope="col">Admin Status</th>
     </tr>
-  {% endfor %}
-</table>
+    {% for user in users %}
+      {% if user.is_active%}
+        <tr>
+          <th>{{user.username}} </th>
+          <th>{{user.email}} </th>
+          <th>{{user.is_staff}} </th>
+          <th><button type="submit" class="btn btn-primary" name='deleteUser' value={{user.id}}>Delete</button></th>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </table>
+</form>
 {% endblock content %}
