@@ -13,7 +13,7 @@ def index(request):
     return render(request, 'wishlistApp/index.html')
 
 def users(request):
-	
+    
 	context = {
 		'users':  get_user_model().objects.all()
 	}
@@ -68,3 +68,11 @@ def delete_account(request):
 	else:
 		form = UserDeleteForm(instance=request.user)
 	return render(request, 'wishlistApp/delete-account.html', {'form':form, 'title': 'Delete Account'})
+
+@login_required
+def user_list(request):
+    return render(request, 'wishlistApp/userList.html')
+
+@login_required
+def new_item(request):
+    return render(request, 'wishlistApp/newItem.html')
