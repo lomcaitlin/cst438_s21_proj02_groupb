@@ -13,7 +13,11 @@ def index(request):
     return render(request, 'wishlistApp/index.html')
 
 def users(request):
-	
+	if request.method == 'POST':
+		id = int(request.POST.get('deleteUser', ''))
+		user = get_user_model().objects.get(pk=id)
+		user.is_active = False;
+		user.save()
 	context = {
 		'users':  get_user_model().objects.all()
 	}
