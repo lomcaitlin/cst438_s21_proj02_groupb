@@ -16,7 +16,7 @@ def users(request):
 	if request.method == 'POST':
 		id = int(request.POST.get('deleteUser', ''))
 		user = get_user_model().objects.get(pk=id)
-		user.is_active = False;
+		user.is_active = False
 		user.save()
 	context = {
 		'users':  get_user_model().objects.all()
@@ -60,7 +60,6 @@ def change_password(request):
 		form = PasswordChangeForm(request.user)
 	return render(request, 'wishlistApp/change-password.html', {'form' : form, 'title' : 'Change Password'})
 
-# still working on implementation of delete
 @login_required
 def delete_account(request):
 	if request.method == 'POST':
@@ -68,7 +67,7 @@ def delete_account(request):
 		user = request.user
 		user.delete()
 		messages.success(request, f"Your account has been deleted.")
-		return redirect('index')
+		return redirect('login')
 	else:
 		form = UserDeleteForm(instance=request.user)
 	return render(request, 'wishlistApp/delete-account.html', {'form':form, 'title': 'Delete Account'})
