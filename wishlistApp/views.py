@@ -6,12 +6,14 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
 from .forms import UserUpdateForm, UserDeleteForm, ItemUpdateForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import update_session_auth_hash, get_user_model
 
 
 def index(request):
-    return render(request, 'wishlistApp/index.html')
+	return render(request, 'wishlistApp/index.html')
 
+@staff_member_required
 def users(request):
 	if request.method == 'POST':
 		id = int(request.POST.get('deleteUser', ''))
@@ -19,7 +21,8 @@ def users(request):
 		user.is_active = False
 		user.save()
 	context = {
-		'users':  get_user_model().objects.all()
+		'users':  get_user_model().objects.all(),
+		'title': 'View Users'
 	}
 	return render(request, 'wishlistApp/users.html', context)
 
