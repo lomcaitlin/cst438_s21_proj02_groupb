@@ -4,7 +4,7 @@ from django.db import models
 from .models import URL, Item
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
-from .forms import UserUpdateForm, UserDeleteForm
+from .forms import UserUpdateForm, UserDeleteForm, ItemUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash, get_user_model
 
@@ -74,8 +74,28 @@ def delete_account(request):
 
 @login_required
 def user_list(request):
-    return render(request, 'wishlistApp/userList.html')
+    user = request.user.get_username()
+    return render(request, 'wishlistApp/userList.html', {'user':user})
 
 @login_required
 def new_item(request):
-    return render(request, 'wishlistApp/newItem.html')
+    if request.method == 'POST':
+        form = ItemUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            #grabbing info user typed in form to save into an Item obj
+            #(not sure if saving the form OR putting info into an Item obj is correct)
+            '''
+            name = request.POST['itemN']
+            url = request.POST['itemURL']
+            desc = request.POST['itemD']
+            image = request.POST['imageURL']
+            priority = request.POST['itemP']
+            ins = Item(name=name, image=url, description=desc, priority = priority, user_id=request.user.get_username())
+            ins.save()
+            '''
+            messages.success(request, f"Item has been added to your Wishlist!")
+            context = {
+                'form' : form,
+            }
+            return render(request, 'wishlistApp/newItem.html', context)
