@@ -14,4 +14,10 @@ class UserDeleteForm(forms.ModelForm):
 class ItemUpdateForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ["name","image","description","priority","url_id"]
+        fields = [
+            'name',
+            'image',
+            'description',
+            'url_id',
+            'priority',
+        ]

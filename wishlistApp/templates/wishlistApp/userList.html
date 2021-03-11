@@ -1,6 +1,6 @@
 {% extends 'wishlistApp/base.html' %}
 {% block content %}
-    <div align=center>{{user}}'s List</div>
+    <div align=center>{{user.get_username}}'s List</div>
     <div align=center>
     <table style="width:100%">
       <tr>
@@ -16,11 +16,15 @@
           <th>{{items.image}} </th>
           <th>{{items.description}} </th>
           <th>{{items.priority}} </th>
-          <th> <button name="Edit" style="background:green">Edit</button>
+          <th> <button name="Edit" style="background:green">
+                <a href="% url 'add-item' %">Edit</a>
+                </button>
                <button name="Remove" style="background:red">Remove</button></th>
         </tr>
       {% endfor %}
-      <button name="Add"> Add Item </button>
+      <button name="Add">
+        <a href="% url 'add-item' %"> Add Item </a>
+      </button>
     </div>
 </table>
 {% endblock content %}

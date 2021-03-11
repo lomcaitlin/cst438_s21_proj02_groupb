@@ -1,16 +1,8 @@
 {% extends 'wishlistApp/base.html' %}
 {% block content %}
-    <form action="/userList.html">
-      <label for="itemN">Item Name:</label>
-      <input type="text" id="itemN" name="itemN"><br><br>
-      <label for="itemURL">Item URL</label>
-      <input type="text" id="itemURL" name="itemURL"><br><br>
-      <label for="itemD">Description</label>
-      <input type="text" id="itemD" name="itemD"><br><br>
-      <label for="imageURL">Image URL</label>
-      <input type="text" id="imageURL" name="imageURL"><br><br>
-      <label for="imageP">Priority</label>
-      <input type="number" id="itemP" name="itemP" min="0" max="10"><br><br>
+    <form action="/userList.html" method="post">
+      {% csrf_token %}
+      {{form}}
       <input type="submit" value="Submit">
     </form>
 {% endblock content %}
