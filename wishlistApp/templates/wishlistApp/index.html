@@ -4,6 +4,34 @@
 {% block content %}
   {% if user.is_authenticated %}
     <!-- display list here --> Make changes to index.html to display the list here!
+    <div>{{user}}'s List</div>
+    <div>
+    <table style="width:100%">
+      <tr>
+        <th>Item</th>
+        <th>Image</th>
+        <th>Description</th>
+        <th>Priority</th>
+        <th></th>
+      </tr>
+      {% for items in Item %}
+        <tr>
+          <th>{{items.name}} </th>
+          <th>{{items.image}} </th>
+          <th>{{items.description}} </th>
+          <th>{{items.priority}} </th>
+          <th> <button name="Edit" style="background:green">
+                <a href="% url 'newItem' %">Edit</a>
+                </button>
+               <button name="Remove" style="background:red">Remove</button></th>
+        </tr>
+      {% endfor %}
+      <button name="Add">
+        <a href="% url 'newItem' %"> Add Item </a>
+      </button>
+    </div>
+</table>
+
   {% else %}
   <div class="jumbotron text-center">
     <h1 class="display-4">Welcome to Wishlist App!</h1>
