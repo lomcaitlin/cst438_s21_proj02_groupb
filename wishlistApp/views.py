@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.db import models
 from .models import URL, Item
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
 from .forms import UserUpdateForm, UserDeleteForm, ItemUpdateForm
@@ -11,7 +12,11 @@ from django.contrib.auth import update_session_auth_hash, get_user_model
 
 
 def index(request):
-	return render(request, 'wishlistApp/index.html')
+	userItems = request.user.item_set.all() # get all items by logged in user
+	priorityValue = request.GET.get('priority')
+	if (priorityValue != "" and priorityValue != None):
+		userItems = userItems.filter(priority=priorityValue)
+	return render(request, 'wishlistApp/index.html', {'items':userItems})
 
 @staff_member_required
 def users(request):
@@ -79,6 +84,12 @@ def delete_account(request):
 def user_list(request):
     user = request.user.get_username()
     return render(request, 'wishlistApp/userList.html', {'user':user})
+
+@login_required
+def filter(request):
+	priority = request.GET.get('request')
+	print(priority)
+	return render(request, 'wishlistApp/index.html')
 
 @login_required
 def new_item(request):

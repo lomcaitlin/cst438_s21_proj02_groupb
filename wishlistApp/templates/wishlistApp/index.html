@@ -4,14 +4,14 @@
 {% block content %}
   {% if user.is_authenticated %}
   <h1>{{ user.username }}'s Wishlist</h1>
-  <form>
+  <form method='GET' action=".">
     <div class="form-row">
       <div class="col-8">
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text" id="">Search By Keyword</span>
           </div>
-          <input type="text" class="form-control">
+          <input type="text" class="form-control" name="keyword">
         </div>
       </div>
       <div class="col-3">
@@ -19,8 +19,9 @@
           <div class="input-group-prepend">
             <span class='input-group-text'>Priority</span>
           </div>
-          <select class="custom-select" id="inputGroupSelect01">
-            <option selected>All</option>
+          <select class="custom-select" id="prioritySelect" name="priority">
+            <option value="" selected>All</option>
+            <option value="0">Zero</option>
             <option value="1">One</option>
             <option value="2">Two</option>
             <option value="3">Three</option>
@@ -28,12 +29,17 @@
         </div>
       </div>
       <div class="col-1">
-        <button class="btn btn-outline-secondary" type="button">Search</button>
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
       </div>
     </div>
   </form>
   <br>
   <!-- display list here --> Make changes to index.html to display the list here!
+  
+  {% for item in items %}
+    <h2>{{ item.name }} test</h2>
+  {% endfor %}
+    
   {% else %}
   <div class="jumbotron text-center">
     <h1 class="display-4">Welcome to Wishlist App!</h1>
