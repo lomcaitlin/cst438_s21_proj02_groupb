@@ -103,6 +103,6 @@ def new_item(request):
             '''
             messages.success(request, f"Item has been added to your Wishlist!")
             return render(request, 'wishlistApp/newItem.html', {'form': form})
-        else:
-            form = ItemUpdateForm(request.POST, instance=request.user)
-    return render(request, 'wishlistApp/newItem.html', context)
+    else:
+        form = ItemUpdateForm(request.POST, instance=request.user)
+    return render(request, 'wishlistApp/newItem.html')
