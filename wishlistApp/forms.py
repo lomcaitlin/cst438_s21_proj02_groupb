@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Item
+from .models import Item, URL
 
 class UserUpdateForm(forms.ModelForm):
   class Meta:
