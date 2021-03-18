@@ -13,6 +13,7 @@ from django.contrib.auth import update_session_auth_hash, get_user_model
 
 def index(request):
 	if request.user.is_authenticated:
+		clearSearch = False
 		allItems = request.user.item_set.all() # get all items by logged in user
 		userItems = []
 		priorityValue = request.GET.get('priority')
@@ -21,13 +22,14 @@ def index(request):
 		if (priorityValue == "" and keywordValue == "" or (priorityValue==None and keywordValue==None)):
 			userItems = allItems
 		else:
+			clearSearch = True
 			if priorityValue == "": #if priority value is nothing, only filter by keyword
 				temp = allItems.filter(name__icontains=keywordValue)
 			else: #filter by both keyword and priority
 				temp = allItems.filter(priority=priorityValue, name__icontains=keywordValue)
 			for i in temp:
 				userItems.append(i)
-		return render(request, 'wishlistApp/index.html', {'items':userItems})
+		return render(request, 'wishlistApp/index.html', {'items':userItems, 'clearSearch':clearSearch})
 	else:
 		return render(request, 'wishlistApp/index.html')
 

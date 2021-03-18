@@ -3,7 +3,15 @@
 
 {% block content %}
   {% if user.is_authenticated %}
-  <h1>{{ user.username }}'s Wishlist</h1>
+  <div class="d-flex justify-content-between align-items-center">
+    <h1>{{ user.username }}'s Wishlist</h1>
+    <div>
+      {% if clearSearch %}
+      <a href="{% url 'index' %}"><button class="btn btn-sm btn-outline-danger" type="button">Clear Search</button></a>
+      {% endif %}
+      <a href="{% url 'newItem' %}" class="btn btn-sm btn-success mr-2">Add Item</a>
+    </div>
+  </div>
   <form method='GET' action=".">
     <div class="form-row">
       <div class="col-8">
