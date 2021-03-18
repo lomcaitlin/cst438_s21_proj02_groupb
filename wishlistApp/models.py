@@ -20,3 +20,7 @@ class Item(models.Model):
     url_id = models.ForeignKey(URL, on_delete=models.CASCADE)
 
 
+    def __str__(self):
+        return self.name + ' ' + self.image + ' ' + self.description + ' ' + str(self.priority) + ' ' + str(self.user_id) + ' ' + str(self.url_id)
+
+

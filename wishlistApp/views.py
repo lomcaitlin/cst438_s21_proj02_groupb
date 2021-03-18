@@ -81,8 +81,10 @@ def delete_account(request):
 @login_required
 def user_list(request):
 	user = request.user.get_username()
-	all_items = Item.objects.all
-	return render(request, 'wishlistApp/userList.html', {'user':user, 'list':all_items})
+	url = URL.objects.all()
+	all_items = Item.objects.all().values
+	
+	return render(request, 'wishlistApp/userList.html', {'user':user, 'list':all_items, 'url':url})
 
 
 

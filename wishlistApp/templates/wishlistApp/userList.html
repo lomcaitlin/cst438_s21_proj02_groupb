@@ -3,28 +3,25 @@
 
 <h3>Welcome {{ user }} to your personal wishlist!</h3><br>
 
-{% for item in list%}
 
-<div id="accordion">
-    <div class="card">
-      <div class="card-header" id="headingOne">
-        <h5 class="mb-0">
-          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            <h4>{{ list.name }}</h4>
-          </button>
-        </h5>
-      </div>
-  
-      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-        <div class="card-body">
-            <p>User Id: {{ list.user_id }} </p>
-            <p>Url_id: {{ list.url_id }}</p>
-            <p>Image: <img src="{{ list.image }}"></img></p>
-            <p>Description: {{ list.description }}</p>
-            <p>Priority: {{ list.priority }}</p>
-        </div>
-      </div>
-</div>
+{% for i in list %}
+<div id="accordion"></div>
+  <div class="card">
+    <div class="card-header" id="heading{{ i.id }}">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ i.id }}" aria-expanded="true" aria-controls="collapseOne">
+          <h4>{{ i.name }}</h4>
+        </button>
+      </h5>
+    </div>
 
+    <div id="collapse{{ i.id }}" class="collapse show" aria-labelledby="heading{{ i.id }}" data-parent="#accordion">
+      <div class="card-body">
+          <p><img src="{{ i.image }}"></img></p>
+          <p>Description: {{ i.description }}</p>
+          <p>Priority: {{ i.priority }}</p>
+      </div>
+    </div>
 {% endfor %}
+</div>
 {% endblock content %}
