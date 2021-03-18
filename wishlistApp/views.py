@@ -75,10 +75,17 @@ def delete_account(request):
 		form = UserDeleteForm(instance=request.user)
 	return render(request, 'wishlistApp/delete-account.html', {'form':form, 'title': 'Delete Account'})
 
+
+
+
 @login_required
 def user_list(request):
-    user = request.user.get_username()
-    return render(request, 'wishlistApp/userList.html', {'user':user})
+	user = request.user.get_username()
+	all_items = Item.objects.all
+	return render(request, 'wishlistApp/userList.html', {'user':user, 'list':all_items})
+
+
+
 
 @login_required
 def new_item(request):
