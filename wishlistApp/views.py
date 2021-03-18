@@ -107,4 +107,4 @@ def new_item(request):
             return render(request, 'wishlistApp/newItem.html', {'form': form})
     else:
         form = ItemUpdateForm(request.POST, instance=request.user)
-    return render(request, 'wishlistApp/newItem.html')
+    return render(request, 'wishlistApp/newItem.html', {'form': form})
