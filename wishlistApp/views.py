@@ -25,7 +25,10 @@ def index(request):
 			temp = allItems.filter(priority=priorityValue, name__icontains=keywordValue)
 		for i in temp:
 			userItems.append(i)
-	return render(request, 'wishlistApp/index.html', {'items':userItems})
+
+	all_items = Item.objects.all().values
+	
+	return render(request, 'wishlistApp/index.html', {'items':userItems, 'stuff':all_items})
 
 @staff_member_required
 def users(request):
@@ -88,19 +91,6 @@ def delete_account(request):
 	else:
 		form = UserDeleteForm(instance=request.user)
 	return render(request, 'wishlistApp/delete-account.html', {'form':form, 'title': 'Delete Account'})
-
-
-
-
-@login_required
-def user_list(request):
-	user = request.user.get_username()
-	url = URL.objects.all()
-	all_items = Item.objects.all().values
-	
-	return render(request, 'wishlistApp/userList.html', {'user':user, 'list':all_items, 'url':url})
-
-
 
 
 @login_required
