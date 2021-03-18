@@ -44,8 +44,25 @@
   <br>
   <!-- display list here --> Make changes to index.html to display the list here!
   
-  {% for item in items %}
-    <h2>{{ item.name }} test</h2>
+  {% for i in stuff %}
+  <div id="accordion"></div>
+    <div class="card">
+      <div class="card-header" id="heading{{ i.id }}">
+        <h5 class="mb-0">
+          <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ i.id }}" aria-expanded="true" aria-controls="collapseOne">
+            <h4>{{ i.name }}</h4>
+          </button>
+        </h5>
+      </div>
+  
+      <div id="collapse{{ i.id }}" class="collapse hide" aria-labelledby="heading{{ i.id }}" data-parent="#accordion">
+        <div class="card-body">
+            <p><img src="{{ i.image }}" width="auto" height="400"></img></p>
+            <p>Description: {{ i.description }}</p>
+            <p>Priority: {{ i.priority }}</p>
+        </div>
+      </div>
+    </div>
   {% endfor %}
     
   {% else %}

@@ -2,7 +2,6 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.db import models
 from .models import URL, Item
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
 from .forms import UserUpdateForm, UserDeleteForm, ItemUpdateForm
@@ -29,9 +28,9 @@ def index(request):
 				temp = allItems.filter(priority=priorityValue, name__icontains=keywordValue)
 			for i in temp:
 				userItems.append(i)
-		return render(request, 'wishlistApp/index.html', {'items':userItems, 'clearSearch':clearSearch})
-	else:
-		return render(request, 'wishlistApp/index.html')
+		return render(request, 'wishlistApp/index.html', {'stuff':userItems, 'clearSearch':clearSearch})
+	else: 
+		return render(request, 'wishlistApp/index.html', {'stuff':userItems})
 
 @staff_member_required
 def users(request):
@@ -95,16 +94,6 @@ def delete_account(request):
 		form = UserDeleteForm(instance=request.user)
 	return render(request, 'wishlistApp/delete-account.html', {'form':form, 'title': 'Delete Account'})
 
-@login_required
-def user_list(request):
-    user = request.user.get_username()
-    return render(request, 'wishlistApp/userList.html', {'user':user})
-
-@login_required
-def filter(request):
-	priority = request.GET.get('request')
-	print(priority)
-	return render(request, 'wishlistApp/index.html')
 
 @login_required
 def new_item(request):

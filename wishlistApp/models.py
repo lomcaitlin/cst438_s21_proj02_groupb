@@ -18,5 +18,3 @@ class Item(models.Model):
     priority = models.IntegerField(default=0)
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     url_id = models.ForeignKey(URL, on_delete=models.CASCADE)
-
-
