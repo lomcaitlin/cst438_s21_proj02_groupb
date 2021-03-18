@@ -11,7 +11,21 @@ from django.contrib.auth import update_session_auth_hash, get_user_model
 
 
 def index(request):
-	return render(request, 'wishlistApp/index.html')
+	allItems = request.user.item_set.all() # get all items by logged in user
+	userItems = []
+	priorityValue = request.GET.get('priority')
+	keywordValue = request.GET.get('keyword')
+	# if theres no query for anything, get all items
+	if (priorityValue == "" and keywordValue == "" or (priorityValue==None and keywordValue==None)):
+		userItems = allItems
+	else:
+		if priorityValue == "": #if priority value is nothing, only filter by keyword
+			temp = allItems.filter(name__icontains=keywordValue)
+		else: #filter by both keyword and priority
+			temp = allItems.filter(priority=priorityValue, name__icontains=keywordValue)
+		for i in temp:
+			userItems.append(i)
+	return render(request, 'wishlistApp/index.html', {'items':userItems})
 
 @staff_member_required
 def users(request):
@@ -99,15 +113,21 @@ def new_item(request):
             #(not sure if saving the form OR putting info into an Item obj is correct)
             '''
             name = request.POST['itemN']
-            url = request.POST['itemURL']
+            itemURL = request.POST['itemURL']
             desc = request.POST['itemD']
             image = request.POST['imageURL']
             priority = request.POST['itemP']
-            ins = Item(name=name, image=url, description=desc, priority = priority, user_id=request.user.get_username())
+            for urls in URL.objects.all():
+                if urls == itemURL:
+                    ins = Item(name=name, image=url, description=desc, priority = priority, user_id=request.user.get_username(), url_id=urls)
+                    break
+                else:
+                    ins = Item(name=name, image=url, description=desc, priority = priority, user_id=request.user.get_username(), url_id=itemURL)
+                    break
             ins.save()
             '''
             messages.success(request, f"Item has been added to your Wishlist!")
-            context = {
-                'form' : form,
-            }
-            return render(request, 'wishlistApp/newItem.html', context)
+            return render(request, 'wishlistApp/newItem.html', {'form': form})
+    else:
+        form = ItemUpdateForm(request.POST, instance=request.user)
+    return render(request, 'wishlistApp/newItem.html')
