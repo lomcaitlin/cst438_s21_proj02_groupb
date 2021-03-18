@@ -11,24 +11,26 @@ from django.contrib.auth import update_session_auth_hash, get_user_model
 
 
 def index(request):
-	allItems = request.user.item_set.all() # get all items by logged in user
-	userItems = []
-	priorityValue = request.GET.get('priority')
-	keywordValue = request.GET.get('keyword')
-	# if theres no query for anything, get all items
-	if (priorityValue == "" and keywordValue == "" or (priorityValue==None and keywordValue==None)):
-		userItems = allItems
-	else:
-		if priorityValue == "": #if priority value is nothing, only filter by keyword
-			temp = allItems.filter(name__icontains=keywordValue)
-		else: #filter by both keyword and priority
-			temp = allItems.filter(priority=priorityValue, name__icontains=keywordValue)
-		for i in temp:
-			userItems.append(i)
-
-	all_items = Item.objects.all().values
-	
-	return render(request, 'wishlistApp/index.html', {'items':userItems, 'stuff':all_items})
+	if request.user.is_authenticated:
+		clearSearch = False
+		allItems = request.user.item_set.all() # get all items by logged in user
+		userItems = []
+		priorityValue = request.GET.get('priority')
+		keywordValue = request.GET.get('keyword')
+		# if theres no query for anything, get all items
+		if (priorityValue == "" and keywordValue == "" or (priorityValue==None and keywordValue==None)):
+			userItems = allItems
+		else:
+			clearSearch = True
+			if priorityValue == "": #if priority value is nothing, only filter by keyword
+				temp = allItems.filter(name__icontains=keywordValue)
+			else: #filter by both keyword and priority
+				temp = allItems.filter(priority=priorityValue, name__icontains=keywordValue)
+			for i in temp:
+				userItems.append(i)
+		return render(request, 'wishlistApp/index.html', {'stuff':userItems, 'clearSearch':clearSearch})
+	else: 
+		return render(request, 'wishlistApp/index.html', {'stuff':userItems})
 
 @staff_member_required
 def users(request):
@@ -120,4 +122,4 @@ def new_item(request):
             return render(request, 'wishlistApp/newItem.html', {'form': form})
     else:
         form = ItemUpdateForm(request.POST, instance=request.user)
-    return render(request, 'wishlistApp/newItem.html')
+    return render(request, 'wishlistApp/newItem.html', {'form': form})

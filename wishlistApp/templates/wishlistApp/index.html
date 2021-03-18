@@ -3,50 +3,68 @@
 
 {% block content %}
   {% if user.is_authenticated %}
-    <!-- display list here --> Make changes to index.html to display the list here!
-    <div>{{user}}'s List</div>
+  <div class="d-flex justify-content-between align-items-center">
+    <h1>{{ user.username }}'s Wishlist</h1>
     <div>
-
-    <table style="width:100%">
-      {% for items in Item %}
-        <tr>
-          <th>{{items.name}} </th>
-          <th>{{items.image}} </th>
-          <th>{{items.description}} </th>
-          <th>{{items.priority}} </th>
-          <th> <button name="Edit" style="background:green">
-                <a href="% url 'newItem' %">Edit</a>
-                </button>
-               <button name="Remove" style="background:red">Remove</button></th>
-        </tr>
-      {% endfor %}
-      <button name="Add">
-        <a href="% url 'newItem' %"> Add Item </a>
-      </button>
-    </div>
-</table>
-{% for i in stuff %}
-<div id="accordion"></div>
-  <div class="card">
-    <div class="card-header" id="heading{{ i.id }}">
-      <h5 class="mb-0">
-        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ i.id }}" aria-expanded="true" aria-controls="collapseOne">
-          <h4>{{ i.name }}</h4>
-        </button>
-      </h5>
-    </div>
-
-    <div id="collapse{{ i.id }}" class="collapse hide" aria-labelledby="heading{{ i.id }}" data-parent="#accordion">
-      <div class="card-body">
-          <p><img src="{{ i.image }}" width="auto" height="400"></img></p>
-          <p>Description: {{ i.description }}</p>
-          <p>Priority: {{ i.priority }}</p>
-      </div>
+      {% if clearSearch %}
+      <a href="{% url 'index' %}"><button class="btn btn-sm btn-outline-danger" type="button">Clear Search</button></a>
+      {% endif %}
+      <a href="{% url 'newItem' %}" class="btn btn-sm btn-success mr-2">Add Item</a>
     </div>
   </div>
-{% endfor %}
-
-
+  <form method='GET' action=".">
+    <div class="form-row">
+      <div class="col-8">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="">Search By Keyword</span>
+          </div>
+          <input type="text" class="form-control" name="keyword">
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class='input-group-text'>Priority</span>
+          </div>
+          <select class="custom-select" id="prioritySelect" name="priority">
+            <option value="" selected>All</option>
+            <option value="0">Zero</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-1">
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+      </div>
+    </div>
+  </form>
+  <br>
+  <!-- display list here --> Make changes to index.html to display the list here!
+  
+  {% for i in stuff %}
+  <div id="accordion"></div>
+    <div class="card">
+      <div class="card-header" id="heading{{ i.id }}">
+        <h5 class="mb-0">
+          <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ i.id }}" aria-expanded="true" aria-controls="collapseOne">
+            <h4>{{ i.name }}</h4>
+          </button>
+        </h5>
+      </div>
+  
+      <div id="collapse{{ i.id }}" class="collapse hide" aria-labelledby="heading{{ i.id }}" data-parent="#accordion">
+        <div class="card-body">
+            <p><img src="{{ i.image }}" width="auto" height="400"></img></p>
+            <p>Description: {{ i.description }}</p>
+            <p>Priority: {{ i.priority }}</p>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+    
   {% else %}
   <div class="jumbotron text-center">
     <h1 class="display-4">Welcome to Wishlist App!</h1>
