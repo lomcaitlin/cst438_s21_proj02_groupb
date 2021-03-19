@@ -42,17 +42,21 @@
     </div>
   </form>
   <br>
-  <!-- display list here --> Make changes to index.html to display the list here!
   
   {% for i in stuff %}
   <div id="accordion"></div>
     <div class="card">
-      <div class="card-header" id="heading{{ i.id }}">
-        <h5 class="mb-0">
+      <div class="card-header d-flex justify-content-between align-items-center" id="heading{{ i.id }}">
+        <span class="mb-0">
+          <span class="badge badge-pill badge-warning">{{ i.priority }}</span>
           <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ i.id }}" aria-expanded="true" aria-controls="collapseOne">
             <h4>{{ i.name }}</h4>
           </button>
-        </h5>
+        </span>
+        <span>
+          <a href="#" class="badge badge-danger">Delete</a>
+          <a href="#" class="badge badge-primary">Edit</a>
+        </span>
       </div>
   
       <div id="collapse{{ i.id }}" class="collapse hide" aria-labelledby="heading{{ i.id }}" data-parent="#accordion">
