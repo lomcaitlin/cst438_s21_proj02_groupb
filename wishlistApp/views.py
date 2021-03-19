@@ -30,7 +30,7 @@ def index(request):
 				userItems.append(i)
 		return render(request, 'wishlistApp/index.html', {'stuff':userItems, 'clearSearch':clearSearch})
 	else: 
-		return render(request, 'wishlistApp/index.html', {'stuff':userItems})
+		return render(request, 'wishlistApp/index.html')
 
 @staff_member_required
 def users(request):
