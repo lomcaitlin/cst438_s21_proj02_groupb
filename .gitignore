@@ -249,6 +249,9 @@ Temporary Items
 
 # mkdocs documentation
 
+#Misc.
+.git
+staticfiles
 # mypy
 
 # Pyre type checker

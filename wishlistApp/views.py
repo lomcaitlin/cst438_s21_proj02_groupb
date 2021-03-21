@@ -8,10 +8,31 @@ from .forms import UserUpdateForm, UserDeleteForm, ItemUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import update_session_auth_hash, get_user_model
-
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import UserSerializer, ItemSerializer, UrlSerializer
 
 def index(request):
-	return render(request, 'wishlistApp/index.html')
+	if request.user.is_authenticated:
+		clearSearch = False
+		allItems = request.user.item_set.all() # get all items by logged in user
+		userItems = []
+		priorityValue = request.GET.get('priority')
+		keywordValue = request.GET.get('keyword')
+		# if theres no query for anything, get all items
+		if (priorityValue == "" and keywordValue == "" or (priorityValue==None and keywordValue==None)):
+			userItems = allItems
+		else:
+			clearSearch = True
+			if priorityValue == "": #if priority value is nothing, only filter by keyword
+				temp = allItems.filter(name__icontains=keywordValue)
+			else: #filter by both keyword and priority
+				temp = allItems.filter(priority=priorityValue, name__icontains=keywordValue)
+			for i in temp:
+				userItems.append(i)
+		return render(request, 'wishlistApp/index.html', {'stuff':userItems, 'clearSearch':clearSearch})
+	else: 
+		return render(request, 'wishlistApp/index.html')
 
 @staff_member_required
 def users(request):
@@ -75,10 +96,6 @@ def delete_account(request):
 		form = UserDeleteForm(instance=request.user)
 	return render(request, 'wishlistApp/delete-account.html', {'form':form, 'title': 'Delete Account'})
 
-@login_required
-def user_list(request):
-    user = request.user.get_username()
-    return render(request, 'wishlistApp/userList.html', {'user':user})
 
 @login_required
 def new_item(request):
@@ -110,5 +127,147 @@ def new_item(request):
         messages.success(request, "SUCCESSFULLY ADDED ITEM!")
         return HttpResponseRedirect('/index.html')
     else:
-        messages.error(request, form.errors)
-    return render(request, 'wishlistApp/newItem.html', {'form':form})
+        form = ItemUpdateForm(request.POST, instance=request.user)
+    return render(request, 'wishlistApp/newItem.html', {'form': form})
+
+@api_view(['GET'])
+def api_overview(request):
+	api_urls = {
+		'View user': '/user/',
+		'View user by id': '/user/<str:pk>',
+		'Create user': '/create-user/',
+		'Update user': '/update-user/<str:pk>',
+		'Delete user': '/delete-user/<str:pk>',
+		'View items': '/item/',
+		'View items by user id': 'item/user_id/<str:user_id>',
+		'View items by id':'item/<str:pk>',
+		'Update item': 'update-item/<str:pk>',
+		'Create item': '/create-item/',
+		'Delete item': '/delete-item/<str:pk>',
+		'View URL': '/url/',
+		'View URL by id': '/url/<str:pk>',
+		'Create URL': '/create-url/',
+		'Update URL': '/update-url/<str:pk>',
+		'Delete URL': '/delete-url/<str:pk>',
+	}
+	return Response(api_urls)
+
+@api_view(['GET'])
+def view_users(request):
+	users = get_user_model().objects.all()
+	serializer = UserSerializer(users, many=True)
+	return Response(serializer.data)
+
+@api_view(['GET'])
+def view_user(request, pk):
+	users = get_user_model().objects.get(id=pk) 
+	serializer = UserSerializer(users, many=False)
+	return Response(serializer.data)
+
+@api_view(['POST'])
+def create_user(request):
+	serializer = UserSerializer(data=request.data)
+	if serializer.is_valid():
+		serializer.save()
+	return Response(serializer.data)
+
+@api_view(['POST'])
+def update_user(request, pk):
+	user = get_user_model().objects.get(id=pk)
+	serializer = UserSerializer(instance = user, data=request.data)
+	if serializer.is_valid():
+		serializer.save()
+	return Response(serializer.data)
+
+@api_view(['DELETE'])
+def delete_user(request, pk):
+	user = get_user_model().objects.get(id=pk)
+	user.delete()
+	return Response("User deleted")
+
+@api_view(['GET'])
+def view_items(request):
+	items = Item.objects.all()
+	serializer = ItemSerializer(items, many=True)
+	return Response(serializer.data)
+
+@api_view(['GET'])
+def view_items_by_user(request, id):
+	try:
+		items = Item.objects.filter(user_id=id)
+	except Item.DoesNotExist:
+		return HttpResponse("ID not found or something")
+	serializer = ItemSerializer(items, many=True)
+	return Response(serializer.data)
+
+@api_view(['GET'])
+def view_items_by_id(request, pk):
+	try:
+		items = Item.objects.get(id=pk)
+	except Item.DoesNotExist:
+		return HttpResponse("ID not found or something")
+	serializer = ItemSerializer(items, many=False)
+	return Response(serializer.data)
+
+@api_view(['POST'])
+def create_item(request):
+	serializer = ItemSerializer(data=request.data)
+	if serializer.is_valid():
+		serializer.save()
+	return Response(serializer.data)
+
+@api_view(['DELETE'])
+def delete_item(request, pk):
+	item = Item.objects.get(id=pk)
+	item.delete()
+	return Response("Item deleted")
+
+@api_view(['POST'])
+def update_item(request, pk):
+	try:
+		item = Item.objects.get(id=pk)
+	except Item.DoesNotExist:
+		return HttpResponse("ID not found or something")
+	serializer = ItemSerializer(instance = item, data=request.data)
+	if serializer.is_valid():
+		serializer.save()
+	return Response(serializer.data)
+
+@api_view(['GET'])
+def view_url(request):
+	url = URL.objects.all()
+	serializer = UrlSerializer(url, many=True)
+	return Response(serializer.data)
+
+@api_view(['GET'])
+def view_url_by_id(request, pk):
+	try:
+		url = URL.objects.get(id=pk)
+	except URL.DoesNotExist:
+		return HttpResponse("ID not found or something")
+	serializer = UrlSerializer(url, many=False)
+	return Response(serializer.data)
+
+@api_view(['POST'])
+def create_url(request):
+	serializer = UrlSerializer(data=request.data)
+	if serializer.is_valid():
+		serializer.save()
+	return Response(serializer.data)
+
+@api_view(['DELETE'])
+def delete_url(request, pk):
+	url = URL.objects.get(id=pk)
+	url.delete()
+	return Response("URL deleted")
+
+@api_view(['POST'])
+def update_url(request, pk):
+	try:
+		url = URL.objects.get(id=pk)
+	except URL.DoesNotExist:
+		return HttpResponse("ID not found or something")
+	serializer = UrlSerializer(instance = url, data=request.data)
+	if serializer.is_valid():
+		serializer.save()
+	return Response(serializer.data)
