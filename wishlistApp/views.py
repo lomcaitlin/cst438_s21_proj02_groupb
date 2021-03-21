@@ -82,29 +82,33 @@ def user_list(request):
 
 @login_required
 def new_item(request):
-    if request.method == 'POST':
-        form = ItemUpdateForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            #grabbing info user typed in form to save into an Item obj
-            #(not sure if saving the form OR putting info into an Item obj is correct)
-            '''
-            name = request.POST['itemN']
-            itemURL = request.POST['itemURL']
-            desc = request.POST['itemD']
-            image = request.POST['imageURL']
-            priority = request.POST['itemP']
-            for urls in URL.objects.all():
-                if urls == itemURL:
-                    ins = Item(name=name, image=url, description=desc, priority = priority, user_id=request.user.get_username(), url_id=urls)
-                    break
-                else:
-                    ins = Item(name=name, image=url, description=desc, priority = priority, user_id=request.user.get_username(), url_id=itemURL)
-                    break
-            ins.save()
-            '''
-            messages.success(request, f"Item has been added to your Wishlist!")
-            return render(request, 'wishlistApp/newItem.html', {'form': form})
+    form = ItemUpdateForm(request.POST or None)
+    if form.is_valid():
+    	# url = URL(url=request.cleaned_data.get('url_id'))
+        form.save()# url.save()
+        name=request.cleaned_data['name'],
+        image=request.cleaned_data['image']
+        description=request.cleaned_data['description']
+        priority=request.cleaned_data['priority']
+        user_id=get_user_model()
+        url_id=request.cleaned_data['url_id']
+        item = Item(
+			name=name,
+			image=image,
+			description=description,
+			priority=priority,
+			user_id=user_id,
+			url_id=url_id
+            # name=request.cleaned_data['name'],
+	        # image=request.cleaned_data['image'],
+	        # description=request.cleaned_data['description'],
+	        # priority=request.cleaned_data['priority'],
+	        # user_id=get_user_model(),
+	        # url_id=request.cleaned_data['url_id']
+        )
+        item.save()
+        messages.success(request, "SUCCESSFULLY ADDED ITEM!")
+        return HttpResponseRedirect('/index.html')
     else:
-        form = ItemUpdateForm(request.POST, instance=request.user)
-    return render(request, 'wishlistApp/newItem.html', {'form': form})
+        messages.error(request, form.errors)
+    return render(request, 'wishlistApp/newItem.html', {'form':form})
