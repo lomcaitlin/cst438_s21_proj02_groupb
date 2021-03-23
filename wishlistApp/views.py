@@ -108,12 +108,16 @@ def new_item(request):
         priority=form.cleaned_data['priority']
         user=request.user
         url=str(request.POST.get('iURL'))
+
+		#saving URL
         if URL.objects.filter(url=url).exists():
             new_url = URL.objects.get(url=url)
             new_url.save()
         else:
             new_url = URL(url=url)
             new_url.save()
+
+		#saving Item
         item = Item(
 			name=name,
 			image=image,
@@ -122,6 +126,7 @@ def new_item(request):
 			user_id=user,
 			url_id=new_url
         )
+
         item.save()
         messages.success(request, f'SUCCESSFULLY ADDED {item.name}!')
         return HttpResponseRedirect('/')
