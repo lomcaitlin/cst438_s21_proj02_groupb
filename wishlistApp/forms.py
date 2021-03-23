@@ -19,13 +19,11 @@ class ItemUpdateForm(forms.ModelForm):
             'name',
             'image',
             'description',
-            'url_id',
             'priority',
         ]
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'ex. New Prebuilt PC!', 'label':'name'}),
             'image': forms.TextInput(attrs={'placeholder': 'Enter the image URL of the item', 'label':'image'}),
             'description': forms.TextInput(attrs={'placeholder': 'ex. New Prebuilt PC!', 'label':'description'}),
-            'url_id': forms.TextInput(attrs={'placeholder': 'Enter the URL for the item', 'label':'url_id'}),
             'priority': forms.NumberInput(attrs={'label':'prio'}),
         }

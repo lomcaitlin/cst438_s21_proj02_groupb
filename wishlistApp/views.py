@@ -32,7 +32,7 @@ def index(request):
 			for i in temp:
 				userItems.append(i)
 		return render(request, 'wishlistApp/index.html', {'stuff':userItems, 'clearSearch':clearSearch})
-	else: 
+	else:
 		return render(request, 'wishlistApp/index.html')
 
 @staff_member_required
@@ -106,19 +106,24 @@ def new_item(request):
         image=form.cleaned_data['image']
         description=form.cleaned_data['description']
         priority=form.cleaned_data['priority']
-        user_id=request.user
-        url_id=form.cleaned_data['url_id']
-        #form.save()
+        user=request.user
+        url=str(request.POST.get('iURL'))
+        if URL.objects.filter(url=url).exists():
+            new_url = URL.objects.get(url=url)
+            new_url.save()
+        else:
+            new_url = URL(url=url)
+            new_url.save()
         item = Item(
 			name=name,
 			image=image,
 			description=description,
 			priority=priority,
-			user_id=user_id,
-			url_id=url_id
+			user_id=user,
+			url_id=new_url
         )
         item.save()
-        messages.success(request, "SUCCESSFULLY ADDED ITEM!")
+        messages.success(request, f'SUCCESSFULLY ADDED {item.name}!')
         return HttpResponseRedirect('/')
     else:
         form = ItemUpdateForm(request.POST, instance=request.user)
@@ -155,7 +160,7 @@ def view_users(request):
 
 @api_view(['GET'])
 def view_user(request, pk):
-	users = get_user_model().objects.get(id=pk) 
+	users = get_user_model().objects.get(id=pk)
 	serializer = UserSerializer(users, many=False)
 	return Response(serializer.data)
 
