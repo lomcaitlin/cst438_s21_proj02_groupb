@@ -11,6 +11,7 @@ from django.contrib.auth import update_session_auth_hash, get_user_model
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import UserSerializer, ItemSerializer, UrlSerializer
+from django.http import HttpResponse, HttpResponseRedirect
 
 def index(request):
 	if request.user.is_authenticated:
@@ -101,14 +102,13 @@ def delete_account(request):
 def new_item(request):
     form = ItemUpdateForm(request.POST or None)
     if form.is_valid():
-    	# url = URL(url=request.cleaned_data.get('url_id'))
-        form.save()# url.save()
-        name=request.cleaned_data['name'],
-        image=request.cleaned_data['image']
-        description=request.cleaned_data['description']
-        priority=request.cleaned_data['priority']
-        user_id=get_user_model()
-        url_id=request.cleaned_data['url_id']
+        name=form.cleaned_data['name']
+        image=form.cleaned_data['image']
+        description=form.cleaned_data['description']
+        priority=form.cleaned_data['priority']
+        user_id=request.user
+        url_id=form.cleaned_data['url_id']
+        #form.save()
         item = Item(
 			name=name,
 			image=image,
@@ -116,18 +116,13 @@ def new_item(request):
 			priority=priority,
 			user_id=user_id,
 			url_id=url_id
-            # name=request.cleaned_data['name'],
-	        # image=request.cleaned_data['image'],
-	        # description=request.cleaned_data['description'],
-	        # priority=request.cleaned_data['priority'],
-	        # user_id=get_user_model(),
-	        # url_id=request.cleaned_data['url_id']
         )
         item.save()
         messages.success(request, "SUCCESSFULLY ADDED ITEM!")
-        return HttpResponseRedirect('/index.html')
+        return HttpResponseRedirect('/')
     else:
         form = ItemUpdateForm(request.POST, instance=request.user)
+        print("form not valid for soem reason")
     return render(request, 'wishlistApp/newItem.html', {'form': form})
 
 @api_view(['GET'])

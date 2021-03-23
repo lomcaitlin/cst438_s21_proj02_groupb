@@ -1,6 +1,6 @@
 {% extends 'wishlistApp/base.html' %}
 {% block content %}
-    <form class="review-form" action="/" method="POST">
+    <form class="review-form" action="" method="POST">
       {% csrf_token %}
       {{form.as_p}}
       <input type="submit" value="Submit">
