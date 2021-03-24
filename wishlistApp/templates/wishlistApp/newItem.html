@@ -1,8 +1,10 @@
 {% extends 'wishlistApp/base.html' %}
 {% block content %}
-    <form action="/userList.html" method="post">
+    <form class="review-form" action="" method="POST">
       {% csrf_token %}
-      {{form}}
+      {{form.as_p}}
+      <label for="iURL"> Item URL</label><br>
+      <input type="text" name="iURL">
       <input type="submit" value="Submit">
     </form>
 {% endblock content %}

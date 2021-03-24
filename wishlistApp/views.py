@@ -11,6 +11,7 @@ from django.contrib.auth import update_session_auth_hash, get_user_model
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import UserSerializer, ItemSerializer, UrlSerializer
+from django.http import HttpResponse, HttpResponseRedirect
 
 def index(request):
 	if request.user.is_authenticated:
@@ -31,7 +32,7 @@ def index(request):
 			for i in temp:
 				userItems.append(i)
 		return render(request, 'wishlistApp/index.html', {'stuff':userItems, 'clearSearch':clearSearch})
-	else: 
+	else:
 		return render(request, 'wishlistApp/index.html')
 
 @staff_member_required
@@ -99,31 +100,39 @@ def delete_account(request):
 
 @login_required
 def new_item(request):
-    if request.method == 'POST':
-        form = ItemUpdateForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            #grabbing info user typed in form to save into an Item obj
-            #(not sure if saving the form OR putting info into an Item obj is correct)
-            '''
-            name = request.POST['itemN']
-            itemURL = request.POST['itemURL']
-            desc = request.POST['itemD']
-            image = request.POST['imageURL']
-            priority = request.POST['itemP']
-            for urls in URL.objects.all():
-                if urls == itemURL:
-                    ins = Item(name=name, image=url, description=desc, priority = priority, user_id=request.user.get_username(), url_id=urls)
-                    break
-                else:
-                    ins = Item(name=name, image=url, description=desc, priority = priority, user_id=request.user.get_username(), url_id=itemURL)
-                    break
-            ins.save()
-            '''
-            messages.success(request, f"Item has been added to your Wishlist!")
-            return render(request, 'wishlistApp/newItem.html', {'form': form})
+    form = ItemUpdateForm(request.POST or None)
+    if form.is_valid():
+        name=form.cleaned_data['name']
+        image=form.cleaned_data['image']
+        description=form.cleaned_data['description']
+        priority=form.cleaned_data['priority']
+        user=request.user
+        url=str(request.POST.get('iURL'))
+
+		#saving URL
+        if URL.objects.filter(url=url).exists():
+            new_url = URL.objects.get(url=url)
+            new_url.save()
+        else:
+            new_url = URL(url=url)
+            new_url.save()
+
+		#saving Item
+        item = Item(
+			name=name,
+			image=image,
+			description=description,
+			priority=priority,
+			user_id=user,
+			url_id=new_url
+        )
+
+        item.save()
+        messages.success(request, f'SUCCESSFULLY ADDED {item.name}!')
+        return HttpResponseRedirect('/')
     else:
         form = ItemUpdateForm(request.POST, instance=request.user)
+        print("form not valid for soem reason")
     return render(request, 'wishlistApp/newItem.html', {'form': form})
 
 @api_view(['GET'])
@@ -156,7 +165,7 @@ def view_users(request):
 
 @api_view(['GET'])
 def view_user(request, pk):
-	users = get_user_model().objects.get(id=pk) 
+	users = get_user_model().objects.get(id=pk)
 	serializer = UserSerializer(users, many=False)
 	return Response(serializer.data)
 

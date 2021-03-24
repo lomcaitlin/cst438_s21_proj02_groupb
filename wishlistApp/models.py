@@ -7,7 +7,7 @@ class User(models.Model):
     password = models.CharField(max_length=200)
     admin = models.BooleanField(default=False)
 """
-    
+
 class URL(models.Model):
     url = models.CharField(max_length=500)
 
