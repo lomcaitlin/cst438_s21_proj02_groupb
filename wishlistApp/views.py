@@ -136,7 +136,7 @@ def new_item(request):
     return render(request, 'wishlistApp/newItem.html', {'form': form, 'title': 'Add a new Item'})
 
 @login_required
-def update_item(request, pk):
+def update_items(request, pk):
     instance = Item.objects.get(id=pk)
     url_instance = instance.url_id.url
     form = ItemUpdateForm(request.POST or None, instance = instance)
@@ -167,7 +167,7 @@ def update_item(request, pk):
     return render(request, 'wishlistApp/update-item.html', {'form': form, 'title': 'Edit Item', 'url': url_instance})
 
 @login_required
-def delete_item(request,pk):
+def delete_items(request,pk):
     instance = Item.objects.get(id=pk)
     if request.method == 'POST':
         form = ItemDeleteForm(request.POST or None, instance = instance)
@@ -264,22 +264,22 @@ def create_item(request):
 		serializer.save()
 	return Response(serializer.data)
 
-# @api_view(['DELETE'])
-# def delete_item(request, pk):
-# 	item = Item.objects.get(id=pk)
-# 	item.delete()
-# 	return Response("Item deleted")
+@api_view(['DELETE'])
+def delete_item(request, pk):
+	item = Item.objects.get(id=pk)
+	item.delete()
+	return Response("Item deleted")
 
-# @api_view(['POST'])
-# def update_item(request, pk):
-# 	try:
-# 		item = Item.objects.get(id=pk)
-# 	except Item.DoesNotExist:
-# 		return HttpResponse("ID not found or something")
-# 	serializer = ItemSerializer(instance = item, data=request.data)
-# 	if serializer.is_valid():
-# 		serializer.save()
-# 	return Response(serializer.data)
+@api_view(['POST'])
+def update_item(request, pk):
+	try:
+		item = Item.objects.get(id=pk)
+	except Item.DoesNotExist:
+		return HttpResponse("ID not found or something")
+	serializer = ItemSerializer(instance = item, data=request.data)
+	if serializer.is_valid():
+		serializer.save()
+	return Response(serializer.data)
 
 @api_view(['GET'])
 def view_url(request):
