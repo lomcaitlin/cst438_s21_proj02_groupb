@@ -4,7 +4,7 @@ from django.db import models
 from .models import URL, Item
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
-from .forms import UserUpdateForm, UserDeleteForm, ItemUpdateForm
+from .forms import UserUpdateForm, UserDeleteForm, ItemUpdateForm, ItemDeleteForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import update_session_auth_hash, get_user_model
@@ -112,7 +112,7 @@ def new_item(request):
 		#saving URL
         if URL.objects.filter(url=url).exists():
             new_url = URL.objects.get(url=url)
-            new_url.save()
+            #new_url.save()
         else:
             new_url = URL(url=url)
             new_url.save()
@@ -133,7 +133,50 @@ def new_item(request):
     else:
         form = ItemUpdateForm(request.POST, instance=request.user)
         print("form not valid for soem reason")
-    return render(request, 'wishlistApp/newItem.html', {'form': form})
+    return render(request, 'wishlistApp/newItem.html', {'form': form, 'title': 'Add a new Item'})
+
+@login_required
+def update_item(request, pk):
+    instance = Item.objects.get(id=pk)
+    url_instance = instance.url_id.url
+    form = ItemUpdateForm(request.POST or None, instance = instance)
+    if form.is_valid():
+        name=form.cleaned_data['name']
+        image=form.cleaned_data['image']
+        description=form.cleaned_data['description']
+        priority=form.cleaned_data['priority']
+        user=request.user
+        url=str(request.POST.get('iURL'))
+
+        if URL.objects.filter(url=url).exists():
+            new_url = URL.objects.get(url=url)
+            #new_url.save()
+        else:
+            new_url = URL(url=url)
+            new_url.save()
+
+        instance.name=name
+        instance.image=image
+        instance.description=description
+        instance.priority=priority
+        instance.url_id=new_url
+        
+        instance.save()
+        messages.success(request, f'SUCCESSFULLY UPDATED {instance.name}!')
+        return HttpResponseRedirect('/')
+    return render(request, 'wishlistApp/update-item.html', {'form': form, 'title': 'Edit Item', 'url': url_instance})
+
+@login_required
+def delete_item(request,pk):
+    instance = Item.objects.get(id=pk)
+    if request.method == 'POST':
+        form = ItemDeleteForm(request.POST or None, instance = instance)
+        instance.delete()
+        messages.success(request, f'SUCCESSFULLY DELETED ITEM FROM WISHLIST!')
+        return HttpResponseRedirect('/')
+    else:
+        form = ItemDeleteForm(instance = instance)
+    return render(request, 'wishlistApp/delete-item.html',{'form':form, 'title': 'Delete Item', 'item': instance.name})
 
 @api_view(['GET'])
 def api_overview(request):
@@ -221,22 +264,22 @@ def create_item(request):
 		serializer.save()
 	return Response(serializer.data)
 
-@api_view(['DELETE'])
-def delete_item(request, pk):
-	item = Item.objects.get(id=pk)
-	item.delete()
-	return Response("Item deleted")
+# @api_view(['DELETE'])
+# def delete_item(request, pk):
+# 	item = Item.objects.get(id=pk)
+# 	item.delete()
+# 	return Response("Item deleted")
 
-@api_view(['POST'])
-def update_item(request, pk):
-	try:
-		item = Item.objects.get(id=pk)
-	except Item.DoesNotExist:
-		return HttpResponse("ID not found or something")
-	serializer = ItemSerializer(instance = item, data=request.data)
-	if serializer.is_valid():
-		serializer.save()
-	return Response(serializer.data)
+# @api_view(['POST'])
+# def update_item(request, pk):
+# 	try:
+# 		item = Item.objects.get(id=pk)
+# 	except Item.DoesNotExist:
+# 		return HttpResponse("ID not found or something")
+# 	serializer = ItemSerializer(instance = item, data=request.data)
+# 	if serializer.is_valid():
+# 		serializer.save()
+# 	return Response(serializer.data)
 
 @api_view(['GET'])
 def view_url(request):

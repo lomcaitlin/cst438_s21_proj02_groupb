@@ -27,3 +27,8 @@ class ItemUpdateForm(forms.ModelForm):
             'description': forms.TextInput(attrs={'placeholder': 'ex. New Prebuilt PC!', 'label':'description'}),
             'priority': forms.NumberInput(attrs={'label':'prio'}),
         }
+
+class ItemDeleteForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = []
