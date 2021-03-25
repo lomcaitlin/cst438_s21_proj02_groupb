@@ -1,0 +1,17 @@
+{% extends 'wishlistApp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <form action="" method="POST">
+      {% csrf_token %}
+      <fieldset class="form-group">
+      <legend class="border-bottom mb-4">Delete Account</legend>
+      <h4> Are you sure you want to delete {{item}} ? </h4>
+      <p class='text-dark'>Once deleted, you can't undo this change.</p>
+      {{form|crispy}} 
+  	  </fieldset>
+  	  <div class="form-group justify-right-parent">
+  	  <input type="submit" class="btn btn-outline-danger" value="Confirm">
+  	  </div>
+    </form>
+    <a href="/"><button class="btn btn-outline-secondary">Cancel</button></a>
+{% endblock content %}

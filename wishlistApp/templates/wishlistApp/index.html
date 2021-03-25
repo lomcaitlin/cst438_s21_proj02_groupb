@@ -54,8 +54,8 @@
           </button>
         </span>
         <span>
-          <a href="#" class="badge badge-danger">Delete</a>
-          <a href="#" class="badge badge-primary">Edit</a>
+          <a href="{% url 'delete_item' i.pk %}" class="badge badge-danger">Delete</a>
+          <a href="{% url 'update_item' i.pk %}" class="badge badge-primary">Edit</a>
         </span>
       </div>
   
