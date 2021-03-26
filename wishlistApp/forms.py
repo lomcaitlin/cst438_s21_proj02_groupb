@@ -25,7 +25,7 @@ class ItemUpdateForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'placeholder': 'ex. New Prebuilt PC!', 'label':'name'}),
             'image': forms.TextInput(attrs={'placeholder': 'Enter the image URL of the item', 'label':'image'}),
             'description': forms.TextInput(attrs={'placeholder': 'ex. New Prebuilt PC!', 'label':'description'}),
-            'priority': forms.NumberInput(attrs={'label':'prio'}),
+            'priority': forms.NumberInput(attrs={'label':'prio', 'value':'0','min':'0', 'max':'5'}),
         }
 
 class ItemDeleteForm(forms.ModelForm):
